@@ -14,5 +14,6 @@ get '/hello-world/' => sub {
 
 };
 
+app->plugin('Vparam');
 app->start;
 
