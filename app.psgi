@@ -1,19 +1,45 @@
-#!/usr/bin/env perl
 
-use Mojolicious::Lite;
+# Application
+package MyApp;
 
-use strict;
+use Mojo::Base 'Mojolicious';
 
-get '/hello-world/' => sub {
+sub startup {
 
-    my $c = shift;
+  my $self = shift;
 
-    #$self->vparam(login    => 'str');
+  # Router
+  my $r = $self->routes;
 
-    $c->render(text => 'Hello World!');
+  # Route
+  $r->get('/validate-email')->to(controller => 'Email', action => 'do');
 
-};
+  $self->plugin('Vparam');
 
-app->plugin('Vparam');
-app->start;
+}
 
+package MyApp::Controller::Email;
+
+use Mojo::Base 'Mojolicious::Controller';
+
+# Action
+
+sub do {
+
+  my $self = shift;
+
+  my $email = $self->param('email');
+
+  $self->vparam( email => 'email');
+
+  $self->render(text => $self->verror('email') ? ($self->verror('email'))."\n"  :  "You've got email from $email!\n" );
+
+}
+
+package main;
+
+require Mojolicious::Commands;
+
+Mojolicious::Commands->start_app('MyApp');
+
+1;

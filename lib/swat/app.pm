@@ -19,7 +19,7 @@ sub start_app {
     my $pid_file = $ENV{pid_file};
     my $trd = test_root_dir();
 
-    system("cd $project_root_dir; nohup carton exec 'plackup --host 0.0.0.0 --port $port' 2>/dev/null 1>/dev/null & echo -n \$! > $pid_file && touch $trd/run.ok");
+    system("cd $project_root_dir; nohup carton exec 'perl app.psgi daemon -l http://0.0.0.0:$port' 2>/dev/null 1>/dev/null & echo -n \$! > $pid_file && touch $trd/run.ok");
 
     my $pid = get_app_pid();
 
